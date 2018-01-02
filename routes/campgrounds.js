@@ -4,8 +4,6 @@ var express         = require("express"),
     geocoder        = require("geocoder"),
     multer          = require('multer'),
     cloudinary      = require('cloudinary');
-   
-    require("dotenv").config();
     
     var router          = express.Router(),
         storage = multer.diskStorage({
