@@ -14,6 +14,8 @@ var express             = require("express"),
     User                = require("./models/user"),
     seedDB              = require("./seeds"),
     methodOverride      = require("method-override");
+    
+    require("dotenv").config();
                         
 //===============================
 // REQUIRING ROUTES
@@ -26,8 +28,13 @@ var campgroundRoutes    = require("./routes/campgrounds"),
 //===============================
 // APP CONFIGURATION
 //===============================
-
-    mongoose.connect("mongodb://localhost/yelp_camp", {useMongoClient: true});
+    
+    
+    //mongoose.connect("mongodb://localhost/yelp_camp", {useMongoClient: true});
+    mongoose.connect(
+        "mongodb://kendev:" + process.env.MLAB_PASS + "@ds239557.mlab.com:39557/yelp_camp_kendev", 
+        {useMongoClient: true}
+    );
     app.use(bodyParser.urlencoded({extended: "true"}));
     app.use(express.static(__dirname + "/public"));
     app.set("view engine", "ejs");    
