@@ -29,7 +29,7 @@ var campgroundRoutes    = require("./routes/campgrounds"),
     
     
     mongoose.connect(process.env.DATABASEURL, {useMongoClient: true});
-    //"mongodb://kendev:9292@ds239557.mlab.com:39557/yelp_camp_kendev", 
+    //"mongodb://kendev:9292@ds239557.mlab.com:39557/yelp_camp_kendev" 
         
     app.use(bodyParser.urlencoded({extended: "true"}));
     app.use(express.static(__dirname + "/public"));
@@ -45,7 +45,7 @@ var campgroundRoutes    = require("./routes/campgrounds"),
 //===============================
 
     app.use(require("express-session")({
-        secret:"Napakaganda ng assawa ko at sexy pa!!!",
+        secret:"Napakaganda ng asawa ko at sexy pa!!!",
         resave: false,
         saveUninitialized: false
     }));
@@ -79,3 +79,4 @@ var campgroundRoutes    = require("./routes/campgrounds"),
     app.listen(process.env.PORT, process.env.IP, function() {
        console.log("YelpCamp server has started"); 
     });
+    

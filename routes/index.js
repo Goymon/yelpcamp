@@ -33,7 +33,7 @@ var router          = express.Router();
                 email: req.body.email,
                 avatar: req.body.avatar
             });
-        if(req.body.adminCode === "secretCode123") {
+        if(req.body.adminCode === process.env.SECRET_CODE) {
             newUser.isAdmin = true;
         }
         User.register(newUser, req.body.password, function(err, user) {
