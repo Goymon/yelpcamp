@@ -2,26 +2,35 @@
 // REQUIRING DEPENDENCIES
 //===============================
 
-var express             = require("express"),
-    app                 = express(),
-    bodyParser          = require("body-parser"),
-    mongoose            = require("mongoose"),
-    Campground          = require("./models/campground"),
-    passport            = require("passport"),
-    flash               = require("connect-flash"),
-    LocalStrategy       = require("passport-local"),
-    Comment             = require("./models/comment"),
-    User                = require("./models/user"),
-    seedDB              = require("./seeds"),
-    methodOverride      = require("method-override");
+var express        = require("express"),
+    app            = express(),
+    bodyParser     = require("body-parser"),
+    mongoose       = require("mongoose"),
+    flash          = require("connect-flash"),
+    cookieParser   = require("cookie-parser"),
+    passport       = require("passport"),
+    LocalStrategy  = require("passport-local"),
+    methodOverride = require("method-override"),
+    User           = require("./models/user"),
+    helmet         = require("helmet"),
+    session        = require("express-session");
+    //seedDB         = require("./seeds");
+    
+    // config dotenv
+    require("dotenv").load();
                         
 //===============================
 // REQUIRING ROUTES
 //===============================
     
-var campgroundRoutes    = require("./routes/campgrounds"),
-    commentdRoutes      = require("./routes/comments"),
-    indexRoutes         = require("./routes/index");
+var commentRoutes    = require("./routes/comments"),
+    campgroundRoutes = require("./routes/campgrounds"),
+    authRoutes       = require("./routes/index"),
+    contactRoutes    = require("./routes/contact"),
+    forgotRoutes     = require("./routes/forgot"),
+    adminRoutes      = require("./routes/admin"),
+    userRoutes       = require("./routes/user");
+
 
 //===============================
 // APP CONFIGURATION
@@ -31,13 +40,20 @@ var campgroundRoutes    = require("./routes/campgrounds"),
     mongoose.connect(process.env.DATABASEURL, {useMongoClient: true});
     //"mongodb://kendev:9292@ds239557.mlab.com:39557/yelp_camp_kendev" 
         
-    app.use(bodyParser.urlencoded({extended: "true"}));
+    mongoose.Promise = global.Promise;
+
+    app.use(bodyParser.urlencoded({extended: true}));
+    app.use(bodyParser.json());
+    app.use(helmet());
+    
+    // use this to remove .ejs from res.render()
+    app.set("view engine", "ejs");
     app.use(express.static(__dirname + "/public"));
-    app.set("view engine", "ejs");    
     app.use(methodOverride("_method"));
     app.use(flash());
+    app.use(cookieParser());
     app.locals.moment = require('moment');
-    // seedDB();
+    // seedDB(); // seed the database for testing purposes.
 
 
 //===============================
@@ -67,9 +83,13 @@ var campgroundRoutes    = require("./routes/campgrounds"),
        next();
     });
 
+    app.use("/", authRoutes);
     app.use("/campgrounds", campgroundRoutes);
-    app.use("/campgrounds/:id/comments", commentdRoutes);
-    app.use(indexRoutes);
+    app.use("/campgrounds/:id/comments", commentRoutes);
+    app.use("/contact", contactRoutes);
+    app.use(forgotRoutes);
+    app.use(adminRoutes);
+    app.use(userRoutes);
 
     
 //===============================
