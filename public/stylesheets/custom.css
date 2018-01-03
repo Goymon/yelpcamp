@@ -196,6 +196,7 @@
       color: #fff;
     }
     
+    
     .footer p {
       line-height: 50px;
       letter-spacing: 1px;
@@ -239,6 +240,9 @@
       margin: 30px auto;
     }
     
+    .flash {
+      margin-top: 10px;
+    }
     
     /* Media */
     @media (max-width: 800px) {

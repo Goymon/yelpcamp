@@ -62,13 +62,13 @@
   </div>
   <div class="container">
     <% if(error && error.length > 0) { %>
-      <div class="alert alert-danger alert-dismissible">
+      <div class="alert alert-danger alert-dismissible flash">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
         <%= error %>
       </div>
     <% } %>
     <% if(success && success.length > 0) { %>
-      <div class="alert alert-success alert-dismissible">
+      <div class="alert alert-success alert-dismissible flash">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
         <%= success %>
       </div>
@@ -99,14 +99,7 @@
       <div class="col-md-12">
         <% if(noMatch) { %>
           <h3><%= noMatch %></h3>
-          <p>
-            <form class="form-inline" action="/campgrounds" method="GET">
-                <div class="form-group">
-                    <input type="text" name="search" placeholder="Campground Search" class="form-control">
-                    <input type="submit" value="Search" class="btn btn-default">
-                </div>
-            </form>
-          </p>
+          
         <% } %>
       </div>
     </div>

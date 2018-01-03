@@ -54,13 +54,13 @@
   
   <div class="container">
     <% if(error && error.length > 0) { %>
-      <div class="alert alert-danger alert-dismissible">
+      <div class="alert alert-danger alert-dismissible flash">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
         <%= error %>
       </div>
     <% } %>
     <% if(success && success.length > 0) { %>
-      <div class="alert alert-success alert-dismissible">
+      <div class="alert alert-success alert-dismissible flash">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
         <%= success %>
       </div>

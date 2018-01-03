@@ -326,7 +326,9 @@
       margin-top: 10px;
     }
     
-    
+    .flash {
+      margin-top: 10px;
+    }
     
     /* Media */
     @media (max-width: 800px) {
