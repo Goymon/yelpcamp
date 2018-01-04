@@ -43,7 +43,7 @@
             bio: req.body.bio,
             loggedIn: false
           });
-          newUser.avatar = "/uploads/userImg/no-user-image-square.jpg";
+          newUser.avatar = "http://res.cloudinary.com/de6uaupbi/image/upload/v1515045107/no-user-image-square_i7nnyb.jpg";
           
           if (req.body.adminCode === process.env.ADMINCODE) {
             newUser.isAdmin = true;
