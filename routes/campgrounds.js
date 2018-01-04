@@ -87,8 +87,8 @@
     });
     
     //CREATE - add new campground to DB
-    router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, res){
-        User.findById(req.user._id, function(err, user) {
+    // router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, res){
+    //     User.findById(req.user._id, function(err, user) {
     //         upload(req, res, function(err){
     // 			if(err){
     // 			 req.flash("error", "Error uploading file");
@@ -101,36 +101,81 @@
     // 				image = "/uploads/no-image.png";
     // 			}
     			
-    			geocoder.geocode(req.body.location, function (err, data) {
-                    if(err || !data.results.length){ // check for error or empty results array
-                        if(err && err.message) console.log(err.message);
-                        req.flash("error", 'No results for that location, please try again');
+    // 			geocoder.geocode(req.body.location, function (err, data) {
+    //                 if(err || !data.results.length){ // check for error or empty results array
+    //                     if(err && err.message) console.log(err.message);
+    //                     req.flash("error", 'No results for that location, please try again');
+    //                     return res.redirect('back');
+    //                 }
+    //                 var desc = req.body.description;
+    //     			var author = {
+    //     				id: req.user._id,
+    //     				username: req.user.username
+    //     			};
+    //     			var cost = req.body.cost;
+    //                 var lat = data.results[0].geometry.location.lat;
+    //                 var lng = data.results[0].geometry.location.lng;
+    //                 var location = data.results[0].formatted_address;
+    //                 var newCampground = {name: name, image: image, description: desc, cost: cost, author: author, location: location, lat: lat, lng: lng};
+    //                 // Create a new campground and save to DB
+    //                 Campground.create(newCampground, function(err, newlyCreated){
+    //                     if(err){
+    //                         console.log(err);
+    //                     } else {
+    //                     	user.campgrounds.push(newlyCreated);
+    //                     	user.save();
+    //                         //redirect back to campgrounds page
+    //                         req.flash("success", "Contrats, " + name + " has been created and added to our listings.");
+    //                         res.redirect("/campgrounds");
+    //                     }
+    //                 });
+    //             });
+    //         });
+    //     });
+    // });
+    
+    router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, res) {
+        
+        geocoder.geocode(req.body.location, function (err, data) {
+            if(err || !data.results[0]) {
+              return  res.render("campgrounds/new", {error: "Location is invalid please try again"});
+            }
+            // eval(require("locus"));
+            var lat = data.results[0].geometry.location.lat;
+            var lng = data.results[0].geometry.location.lng;
+            var location = data.results[0].formatted_address;
+            
+        
+            cloudinary.uploader.upload(req.file.path, function(result) {
+                
+                var name = req.body.name;
+                var image = result.secure_url;
+                var desc = req.body.description;
+                var author = {
+                    id: req.user._id,
+                    username: req.user.username
+                }
+                var cost = req.body.cost;
+                var newCampground = {
+                    name: name, 
+                    image: image, 
+                    description: desc, 
+                    cost: cost, 
+                    author: author, 
+                    location: location, 
+                    lat: lat, 
+                    lng: lng};
+                
+                Campground.create(newCampground, function(err, newlyCreated) {
+                    if(err){
+                        req.flash('error', err.message);
                         return res.redirect('back');
+                    } else {
+                        req.flash("success", "Successfuly created a campground");
+                        res.redirect('/campgrounds/' + newlyCreated.id);
                     }
-                    var desc = req.body.description;
-        			var author = {
-        				id: req.user._id,
-        				username: req.user.username
-        			};
-        			var cost = req.body.cost;
-                    var lat = data.results[0].geometry.location.lat;
-                    var lng = data.results[0].geometry.location.lng;
-                    var location = data.results[0].formatted_address;
-                    var newCampground = {name: name, image: image, description: desc, cost: cost, author: author, location: location, lat: lat, lng: lng};
-                    // Create a new campground and save to DB
-                    Campground.create(newCampground, function(err, newlyCreated){
-                        if(err){
-                            console.log(err);
-                        } else {
-                        	user.campgrounds.push(newlyCreated);
-                        	user.save();
-                            //redirect back to campgrounds page
-                            req.flash("success", "Contrats, " + name + " has been created and added to our listings.");
-                            res.redirect("/campgrounds");
-                        }
-                    });
-                });
-            // });
+                }); 
+            });
         });
     });
      
