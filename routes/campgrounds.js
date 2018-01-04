@@ -6,37 +6,37 @@
     var geocoder = require('geocoder');
     var multer = require("multer");
     
-    var storage =   multer.diskStorage({
-      destination: function(req, file, callback) {
-        callback(null, './public/uploads');
-      },
-      filename: function(req, file, callback) {
-        callback(null, Date.now() + file.originalname);
-      }
-    });
-    var upload = multer({ storage : storage}).single('image');
-    
-    // var multer = require('multer');
-    // var storage = multer.diskStorage({
+    // var storage =   multer.diskStorage({
+    //   destination: function(req, file, callback) {
+    //     callback(null, './public/uploads');
+    //   },
     //   filename: function(req, file, callback) {
     //     callback(null, Date.now() + file.originalname);
     //   }
     // });
-    // var imageFilter = function (req, file, cb) {
-    //     // accept image files only
-    //     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
-    //         return cb(new Error('Only image files are allowed!'), false);
-    //     }
-    //     cb(null, true);
-    // };
-    // var upload = multer({ storage: storage, fileFilter: imageFilter})
+    // var upload = multer({ storage : storage}).single('image');
     
-    // var cloudinary = require('cloudinary');
-    // cloudinary.config({ 
-    //   cloud_name: 'learntocodeinfo', 
-    //   api_key: process.env.CLOUDINARY_API_KEY, 
-    //   api_secret: process.env.CLOUDINARY_API_SECRET
-    // });
+    var multer = require('multer');
+    var storage = multer.diskStorage({
+      filename: function(req, file, callback) {
+        callback(null, Date.now() + file.originalname);
+      }
+    });
+    var imageFilter = function (req, file, cb) {
+        // accept image files only
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+            return cb(new Error('Only image files are allowed!'), false);
+        }
+        cb(null, true);
+    };
+    var upload = multer({ storage: storage, fileFilter: imageFilter})
+    
+    var cloudinary = require('cloudinary');
+    cloudinary.config({ 
+      cloud_name: 'learntocodeinfo', 
+      api_key: process.env.CLOUDINARY_API_KEY, 
+      api_secret: process.env.CLOUDINARY_API_SECRET
+    });
     
     
     //INDEX - show all campgrounds
@@ -87,31 +87,32 @@
     });
     
     //CREATE - add new campground to DB
-    router.post("/", middleware.isLoggedIn, function(req, res){
+    router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, res){
         User.findById(req.user._id, function(err, user) {
-            upload(req, res, function(err){
-    			if(err){
-    			 req.flash("error", "Error uploading file");
-    			 return res.redirect("back");
-    			}
-    			var name = req.body.name;
-    			if(typeof req.file !== "undefined") {
-    				var image = "/uploads/" + req.file.filename;
-    			} else {
-    				image = "/uploads/no-image.png";
-    			}
-    			var desc = req.body.description;
-    			var author = {
-    				id: req.user._id,
-    				username: req.user.username
-    			};
-    			var cost = req.body.cost;
+    //         upload(req, res, function(err){
+    // 			if(err){
+    // 			 req.flash("error", "Error uploading file");
+    // 			 return res.redirect("back");
+    // 			}
+    // 			var name = req.body.name;
+    // 			if(typeof req.file !== "undefined") {
+    // 				var image = "/uploads/" + req.file.filename;
+    // 			} else {
+    // 				image = "/uploads/no-image.png";
+    // 			}
+    			
     			geocoder.geocode(req.body.location, function (err, data) {
                     if(err || !data.results.length){ // check for error or empty results array
                         if(err && err.message) console.log(err.message);
                         req.flash("error", 'No results for that location, please try again');
                         return res.redirect('back');
                     }
+                    var desc = req.body.description;
+        			var author = {
+        				id: req.user._id,
+        				username: req.user.username
+        			};
+        			var cost = req.body.cost;
                     var lat = data.results[0].geometry.location.lat;
                     var lng = data.results[0].geometry.location.lng;
                     var location = data.results[0].formatted_address;
@@ -129,7 +130,7 @@
                         }
                     });
                 });
-            });
+            // });
         });
     });
      
