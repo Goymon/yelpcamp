@@ -30,14 +30,14 @@ router.post("/send", function(req, res) {
         var smtpTransport = nodemailer.createTransport({
             service: 'Gmail', 
             auth: {
-              user: 'webkendev@gmail.com',
-              pass: process.env.GMAILPW1
+              user: 'letscamp22@gmail.com',
+              pass: '123456789JCB'
             }
         });
          
         var mailOptions = {
-            from: 'Kenneth Rodriguez <webkendev@gmail.com',
-            to: 'webkendev@gmail.com',
+            from: 'Kenneth Rodriguez <letscamp22@gmail.com',
+            to: 'letscamp22@gmail.com',
             replyTo: req.body.email,
             subject: "Let's Camp contact request from: " + req.body.name,
             text: 'You have received an email from... Name: '+ req.body.name + ' Phone: ' + req.body.phone + ' Email: ' + req.body.email + ' Message: ' + req.body.message,
