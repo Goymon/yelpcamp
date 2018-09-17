@@ -79,6 +79,7 @@
                 updateRoute(req, res, filePath);
                 
             } else {
+                eval(require("locus"))
                 cloudinary.uploader.upload(req.file.path, function(result) {
                     if(result.error) {
                         req.flash("error", result.error.message);

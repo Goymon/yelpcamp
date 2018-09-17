@@ -163,7 +163,8 @@
                     author: author, 
                     location: location, 
                     lat: lat, 
-                    lng: lng};
+                    lng: lng
+                };
                 
                 Campground.create(newCampground, function(err, newlyCreated) {
                     if(err){

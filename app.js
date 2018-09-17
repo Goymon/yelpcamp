@@ -37,8 +37,8 @@ var commentRoutes    = require("./routes/comments"),
 //===============================
     
     
-    mongoose.connect("mongodb://goymon:goymonpogi@ds239557.mlab.com:39557/yelp_camp_kendev", {useMongoClient: true});
-    //"mongodb://goymon:goymonpogi@ds239557.mlab.com:39557/yelp_camp_kendev" 
+    mongoose.connect(process.env.DATABASEURL, {useMongoClient: true});
+    //"mongodb://kendev:9292@ds239557.mlab.com:39557/yelp_camp_kendev" 
         
     mongoose.Promise = global.Promise;
 
